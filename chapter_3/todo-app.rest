@@ -1,0 +1,24 @@
+### GET /
+GET http://localhost:5003
+
+### Register a new user
+POST http://localhost:5003/auth/register
+Content-Type: application/json
+
+{ "username": "David@gmail.com", "password": "123123123" }
+
+### Login as a user
+POST http://localhost:5003/auth/login
+Content-Type: application/json
+
+{ "username": "David@gmail.com", "password": "123123123" }
+
+### Create a new todo
+
+### Get all the todos
+
+
+### Update a particular todo with id
+
+
+### Delete a particular todo with id
