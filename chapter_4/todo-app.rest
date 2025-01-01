@@ -1,0 +1,39 @@
+### GET /
+GET http://localhost:5003
+
+### Register a new user
+POST http://localhost:5003/auth/register
+Content-Type: application/json
+
+{ "username": "David@gmail.com", "password": "123123123" }
+
+### Login as a user
+POST http://localhost:5003/auth/login
+Content-Type: application/json
+
+{ "username": "David@gmail.com", "password": "123123123" }
+
+### Create a new todo
+POST http://localhost:5003/todos
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzM1NTkwMzcyLCJleHAiOjE3MzU2NzY3NzJ9.7pkG8x8tBTbB3iApDu93s6pZVQLAU0p9ob0fvmecQqg
+
+{ "task": "buy bread every single day" }
+
+### Get all the todos
+GET http://localhost:5003/todos
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzM1NTkwMzcyLCJleHAiOjE3MzU2NzY3NzJ9.7pkG8x8tBTbB3iApDu93s6pZVQLAU0p9ob0fvmecQqg
+
+
+### Update a particular todo with id 
+PUT http://localhost:5003/todos/2
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzM1NTkwMzcyLCJleHAiOjE3MzU2NzY3NzJ9.7pkG8x8tBTbB3iApDu93s6pZVQLAU0p9ob0fvmecQqg
+
+{"completed": 1}
+
+
+### Delete a particular todo with id
+DELETE http://localhost:5003/todos/2
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzM1NTkwMzcyLCJleHAiOjE3MzU2NzY3NzJ9.7pkG8x8tBTbB3iApDu93s6pZVQLAU0p9ob0fvmecQqg
+
