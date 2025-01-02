@@ -1,47 +1,70 @@
 import express from 'express';
-import db from '../db.js';
+import prisma from '../prismaClient.js';
 
 const router = express.Router();
 
 // get all todos for logged in users
-router.get('/', (req, res) => {
-  const todoFields = ['id', 'user_id', 'task', 'completed']
-  const getTodos = db.prepare(`select ${todoFields.join(',')}, task from todos where deleted = 0 AND user_id = ?`);
-  const todos = getTodos.all(req.userId);
+router.get('/', async (req, res) => {
+  const todos = await prisma.todo.findMany({
+    where: {
+      userId: req.userId,
+      deleted: false,
+    },
+  });
   res.json(todos);
 });
 
 //  create a new todo
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const { task } = req.body;
-  const insertTodo = db.prepare(
-    `insert into todos(user_id, task) values(?, ?)`
-  );
-  const todo = insertTodo.run(req.userId, task);
-  res.json({ id: todo.lastInsertRowid, task, completed: 0 });
+  const todo = await prisma.todo.create({
+    data: {
+      task,
+      userId: req.userId,
+    },
+  });
+  res.json(todo);
 });
 
 // update a todo
 
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   const { completed } = req.body;
   const { id } = req.params;
-  const updatedTodo = db.prepare(`update todos set completed= ? where id = ?`)
-  updatedTodo.run(completed, id)
-  res.status(200).json({message: "Todo updated successfully"});
+  const updatedTodo = await prisma.todo.update({
+    where: {
+      id: parseInt(id),
+      userId: req.userId,
+    },
+    data: {
+      completed: !!completed,
+    },
+  });
+  res.status(200).json(updatedTodo);
 });
 
 // delete a todo
-router.delete('/:id', (req, res) => {
-  const {id} = req.params;
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
   //  hard delete
-  // const deleteTodo = db.prepare(`delete from todos where user_id= ? AND id=?`)
-  // deleteTodo.run(req.userId, id)
+  // const deletedTodo = await prisma.todo.delete({
+  //   where: {
+  //     id: parseInt(id),
+  //     userId: req.userId,
+  //   },
+  // })
 
   // soft delete preferred
-  const deleteTodo = db.prepare(`update todos set deleted= 1 where id =?`)
-  deleteTodo.run(id)
-  res.status(200).json({message: "Todo deleted successfully"});
+  const deletedTodo = await prisma.todo.update({
+    where: {
+      id: parseInt(id),
+      userId: req.userId,
+    },
+    data: {
+      deleted: true,
+    },
+  });
+  res.status(200).json(deletedTodo);
 });
 
 export default router;
